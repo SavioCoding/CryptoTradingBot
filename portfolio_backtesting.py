@@ -18,8 +18,8 @@ class PortfolioBacktester:
 
     def calculate_strategy_return(self):
         self.no_of_trades = self.positions.diff().fillna(0).abs()
-        self.strategy_df = self.price_data.pct_change() * self.positions.shift(1).values
-        self.strategy_df = self.strategy_df.add(self.no_of_trades.values * self.tc)
+        self.strategy_df = self.price_data.pct_change() * self.positions.shift(1)
+        self.strategy_df = self.strategy_df.add(self.no_of_trades * self.tc)
         self.strategy_df["portfolio_return"] = self.strategy_df.mean(axis = 1) # 1/n weighting
         self.strategy_df["cportfolio_return"] = (self.strategy_df["portfolio_return"] + 1).cumprod()
     def backtest(self):
