@@ -14,7 +14,7 @@ from datetime import datetime
 
 
 class MACTrader():
-    def __init__(self, symbols, params, usdtunits, testnet_client, data_client, bar_length):
+    def __init__(self, symbols, params_dict, usdtunits, testnet_client, data_client, bar_length):
         self.symbols = symbols
         self.params_dict = params_dict
         self.usdtunits = usdtunits
@@ -28,7 +28,7 @@ class MACTrader():
         self.price_data = None
         self.position_data = None
         self.last_positions = None
-        self.last_positions_path = "./Trader/positions/MAC.csv"
+        self.last_positions_path = "./Traders/positions/MAC.csv"
 
     def get_most_recent(self, interval, days, data_client):
         now = datetime.utcnow()
@@ -67,13 +67,13 @@ class MACTrader():
                 else:
                     print(f"{symbol}: Remain Neutral")
         self.last_positions = self.position_data.tail(1)
-        self.last_positions.to_csv("./Trader/positions/MAC.csv")
+        self.last_positions.to_csv("./Traders/positions/MAC.csv")
 
     def start_trading(self):
         # last positions are all zero
         if not os.path.isfile(trader.last_positions_path):
             last_positions = pd.DataFrame(data=0, index=[datetime.utcnow().date()], columns=self.symbols)
-            last_positions.to_csv("./Trader/positions/MAC.csv")
+            last_positions.to_csv("./Traders/positions/MAC.csv")
             self.last_positions = last_positions
         # last position are being tracked
         else:
@@ -120,6 +120,6 @@ if __name__ == "__main__":  # only if we run MACtrader.py as a script, please do
     params_dict = {'BTCUSDT': (10.0, 25.0), 'ETHUSDT': (15.0, 50.0)}
     bar_length = "1d"
     units = 50 # e.g each trade use 50 usdt
-    trader = MACTrader(symbols=symbols, params = params_dict, usdtunits=units, testnet_client=testnet_client, data_client = data_client, bar_length = "1d")
+    trader = MACTrader(symbols=symbols, params_dict = params_dict, usdtunits=units, testnet_client=testnet_client, data_client = data_client, bar_length = "1d")
     trader.start_trading()
     print(testnet_client.get_account())

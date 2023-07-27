@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 class PortfolioBacktester:
-    def __init__(self, positions, price_data, tc = 0):
+    def __init__(self, positions, price_data, tc = -0.001):
         self.positions = positions
         self.price_data = price_data
         self.tc = tc
@@ -99,5 +99,5 @@ class PortfolioBacktester:
             return np.nan
         else:
             return self.calculate_bh_cagr() / self.calculate_bh_annualized_std()
-        
+
     

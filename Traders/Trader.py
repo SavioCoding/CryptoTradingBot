@@ -1,20 +1,15 @@
 import datetime
-from binance.client import Client
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 from scrap import get_historical_data
-from dataapi import api_key as data_api, secret_key as data_secret
-from testapi import api_key as testnet_api, secret_key as testnet_secret
-import sys
+from abc import abstractmethod
 import os
-sys.path.insert(1, './strategies')
-from MACStrategy import MAC
 from datetime import datetime
 
 
-class MACTrader():
-    def __init__(self, symbols, params, usdtunits, testnet_client, data_client, bar_length, last_positions_path):
+class Trader():
+    def __init__(self, symbols, params_dict, usdtunits, testnet_client, data_client, bar_length, last_positions_path):
         self.symbols = symbols
         self.params_dict = params_dict
         self.usdtunits = usdtunits
@@ -41,30 +36,29 @@ class MACTrader():
             price_list.append(dataSeries)
         self.price_data = pd.concat(price_list, axis=1)
 
+    @abstractmethod
     def generate_trading_signals(self):
-        macStrat = MAC(None, None, self.price_data.copy(), self.symbols)
-        for symbol, params in self.params_dict.items():
-            macStrat.generate_signals(symbol, params)
-        self.position_data = macStrat.position_data
+        while False:
+            yield None
+
 
     def execute_trades(self):
-        last_positions = pd.read_csv(self.last_positions_path)
+        self.last_positions = pd.read_csv(self.last_positions_path)
         for symbol in self.symbols:
             # current position is long
             price = self.price_data[symbol].iloc[-1]
-            unitsToOrder = round(self.usdtunits / price,3)
             if self.position_data[symbol].iloc[-1] == 1:
                 # go long
                 if self.last_positions[symbol].iloc[-1] == 0:
-                    order = testnet_client.create_order(symbol=symbol, side="BUY", type="MARKET", quantity = unitsToOrder)
+                    order = self.testnet_client.create_order(symbol=symbol, side="BUY", type="MARKET", quoteOrderQty = self.usdtunits)
                     self.report_trade(order, "GOING LONG", symbol)
                 else:
                     print(f"{symbol}: Remain Long")
             # current position is neutral
             if self.position_data[symbol].iloc[-1] == 0:
                 if self.last_positions[symbol].iloc[-1] == 1:
-                    order = testnet_client.create_order(symbol=symbol, side="SELL", type="MARKET", quantity = unitsToOrder)
-                    self.report_trade(order, "GOING NEUTRAL")
+                    order = self.testnet_client.create_order(symbol=symbol, side="SELL", type="MARKET", quoteOrderQty = self.usdtunits)
+                    self.report_trade(order, "GOING NEUTRAL", symbol)
                 else:
                     print(f"{symbol}: Remain Neutral")
         self.last_positions = self.position_data.tail(1)
@@ -72,18 +66,18 @@ class MACTrader():
 
     def start_trading(self):
         # last positions are all zero
-        if not os.path.isfile(trader.last_positions_path):
+        if not os.path.isfile(self.last_positions_path):
             last_positions = pd.DataFrame(data=0, index=[datetime.utcnow().date()], columns=self.symbols)
             last_positions.to_csv(self.last_positions_path)
             self.last_positions = last_positions
         # last position are being tracked
         else:
             self.last_positions = pd.read_csv(self.last_positions_path)
-        trader.get_most_recent(bar_length, 200, data_client)
-        trader.define_strategy()
-        trader.execute_trades()
+        self.get_most_recent(self.bar_length, 200, self.data_client)
+        self.generate_trading_signals()
+        self.execute_trades()
 
-    def report_trade(self, order, going):
+    def report_trade(self, order, going, symbol):
 
         # extract data from order object
         side = order["side"]
@@ -112,15 +106,3 @@ class MACTrader():
         print("{} | Base_Units = {} | Quote_Units = {} | Price = {} ".format(time, base_units, quote_units, price))
         print("{} | Profit = {} | CumProfits = {} ".format(time, real_profit, self.cum_profits))
         print(100 * "-" + "\n")
-
-
-if __name__ == "__main__":  # only if we run MACtrader.py as a script, please do the following:
-    testnet_client = Client(api_key=testnet_api, api_secret=testnet_secret, tld="com", testnet=True)
-    data_client = Client(api_key=data_api, api_secret=data_secret, tld="com")
-    symbols = ["BTCUSDT", "ETHUSDT"]
-    params_dict = {'BTCUSDT': (10.0, 25.0), 'ETHUSDT': (15.0, 50.0)}
-    bar_length = "1d"
-    units = 50 # e.g each trade use 50 usdt
-    trader = MACTrader(symbols=symbols, params = params_dict, usdtunits=units, testnet_client=testnet_client, data_client = data_client, bar_length = "1d")
-    trader.start_trading()
-    print(testnet_client.get_my_trades(symbol="ETHUSDT"))
