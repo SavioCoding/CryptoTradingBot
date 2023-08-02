@@ -1,1 +1,1 @@
-{"BTCUSDT": [25.0, 20.0], "ETHUSDT": [25.0, 20.0], "BNBUSDT": [25.0, 20.0], "LTCUSDT": [10.0, 5.0], "TRXUSDT": [25.0, 20.0], "XRPUSDT": [50.0, 5.0]}
+{"BTCUSDT": [25.0, 20.0], "ETHUSDT": [25.0, 20.0], "LTCUSDT": [10.0, 5.0], "TRXUSDT": [25.0, 20.0], "XRPUSDT": [50.0, 5.0]}

@@ -4,8 +4,8 @@ import numpy as np
 import json
 
 class MACRSI(Strategy):
-    def __init__(self, training_period, testing_period, price_data, symbols):
-        super().__init__(training_period, testing_period, price_data, symbols)
+    def __init__(self, training_period, testing_period, price_data, symbols, risk_parity_dict):
+        super().__init__(training_period, testing_period, price_data, symbols, risk_parity_dict)
 
     def get_rsi(self, symbol, days):
         delta = self.price_data[symbol].diff(1)
@@ -69,8 +69,10 @@ class MACRSI(Strategy):
 if __name__ == "__main__":
 
     # read the data
-    symbols = ["BTCUSDT", "ETHUSDT","BNBUSDT","LTCUSDT","TRXUSDT","XRPUSDT"]
+    symbols = ["BTCUSDT", "ETHUSDT","LTCUSDT","TRXUSDT","XRPUSDT"]
     price_list = []
+    with open('../risk_parity.json', 'r') as fp:
+        risk_parity_dict = json.load(fp)
     for symbol in symbols:
         data = pd.read_csv(f"../data/{symbol}-1d.csv", parse_dates=["Date"], index_col="Date")
         data = data.loc["2019-01-01":]
@@ -80,7 +82,7 @@ if __name__ == "__main__":
     price_data = pd.concat(price_list, axis = 1)
     training_period = ("2020-01-01", "2021-12-31")
     testing_period = ("2022-01-01", "2023-05-31")
-    macrsiStrat = MACRSI(training_period, testing_period, price_data, symbols)
+    macrsiStrat = MACRSI(training_period, testing_period, price_data, symbols, risk_parity_dict)
     # # True means training, False means testing
     short_windows = [5, 10, 15, 20, 25, 30, 40, 50]
     long_windows = [25, 50, 75, 100, 150]

@@ -4,8 +4,8 @@ import numpy as np
 import json
 
 class MAC(Strategy):
-    def __init__(self, training_period, testing_period, price_data, symbols):
-        super().__init__(training_period, testing_period, price_data, symbols)
+    def __init__(self, training_period, testing_period, price_data, symbols, risk_parity_dict):
+        super().__init__(training_period, testing_period, price_data, symbols, risk_parity_dict)
 
     # window (int) and long window (int) to generate signals
     def generate_signals(self, symbol, params):
@@ -42,7 +42,7 @@ class MAC(Strategy):
 if __name__ == "__main__":
 
     # read the data
-    symbols = ["BTCUSDT", "ETHUSDT","BNBUSDT","LTCUSDT","TRXUSDT","XRPUSDT"]
+    symbols = ["BTCUSDT", "ETHUSDT","LTCUSDT","TRXUSDT","XRPUSDT"]
     price_list = []
     for symbol in symbols:
         data = pd.read_csv(f"../data/{symbol}-1d.csv", parse_dates=["Date"], index_col="Date")
@@ -53,7 +53,9 @@ if __name__ == "__main__":
     price_data = pd.concat(price_list, axis = 1)
     training_period = ("2020-01-01", "2021-12-31")
     testing_period = ("2022-01-01", "2023-05-31")
-    macStrat = MAC(training_period, testing_period, price_data, symbols)
+    with open('../risk_parity.json', 'r') as fp:
+        risk_parity_dict = json.load(fp)
+    macStrat = MAC(training_period, testing_period, price_data, symbols, risk_parity_dict)
     # # True means training, False means testing
     short_windows = [5, 10, 15, 20, 25, 30, 40, 50]
     long_windows = [25, 50, 75, 100, 150]
@@ -68,5 +70,4 @@ if __name__ == "__main__":
     # found (15 ,50) is the best combination for LTCUSDT
     # found (5, 50) is the best combination for TRXUSDT
     # found (10, 25) is the best combination for XRPUSDT
-
     macStrat.backtest(params_dict, False)

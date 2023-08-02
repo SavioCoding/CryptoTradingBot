@@ -4,8 +4,8 @@ import numpy as np
 import json
 
 class Momentum(Strategy):
-    def __init__(self, training_period, testing_period, price_data, symbols):
-        super().__init__(training_period, testing_period, price_data, symbols)
+    def __init__(self, training_period, testing_period, price_data, symbols, risk_parity_dict):
+        super().__init__(training_period, testing_period, price_data, symbols, risk_parity_dict)
         self.returns = self.price_data.pct_change()
         self.rolling_return = None
 
@@ -35,7 +35,7 @@ class Momentum(Strategy):
 if __name__ == "__main__":
 
     # read the data
-    symbols = ["BTCUSDT", "ETHUSDT","BNBUSDT","LTCUSDT","TRXUSDT","XRPUSDT"]
+    symbols = ["BTCUSDT", "ETHUSDT","LTCUSDT","TRXUSDT","XRPUSDT"]
     price_list = []
     for symbol in symbols:
         data = pd.read_csv(f"../data/{symbol}-1d.csv", parse_dates=["Date"], index_col="Date")
@@ -46,7 +46,9 @@ if __name__ == "__main__":
     price_data = pd.concat(price_list, axis = 1)
     training_period = ("2020-01-01", "2021-12-31")
     testing_period = ("2022-01-01", "2023-05-31")
-    momentumStrat = Momentum(training_period, testing_period, price_data, symbols)
+    with open('../risk_parity.json', 'r') as fp:
+        risk_parity_dict = json.load(fp)
+    momentumStrat = Momentum(training_period, testing_period, price_data, symbols, risk_parity_dict)
     # # True means training, False means testing
     periods = (10, 20, 30, 90, 180, 270, 360)
     params_dict = momentumStrat.optimise_strategy(periods, True)

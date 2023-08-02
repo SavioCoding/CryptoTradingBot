@@ -6,13 +6,13 @@ from scrap import get_historical_data
 from abc import abstractmethod
 import os
 from datetime import datetime
+import json
 
 
 class Trader():
-    def __init__(self, symbols, params_dict, usdtunits, testnet_client, data_client, bar_length, last_positions_path, strategy = None):
+    def __init__(self, symbols, params_dict, testnet_client, data_client, bar_length, last_positions_path, symbolToUnits, initialUnit, strategy = None):
         self.symbols = symbols
         self.params_dict = params_dict
-        self.usdtunits = usdtunits
         self.testnet_client = testnet_client
         self.data_client = data_client
         self.available_intervals = ["1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "8h", "12h", "1d", "3d",
@@ -21,14 +21,18 @@ class Trader():
         self.trades = 0
         self.trade_values = []
         self.price_data = None
-        self.position_data = None
-        self.last_positions = None
+        self.s = None
+        self.last_positions = None # about positions
         self.last_positions_path = last_positions_path
         self.strategy = strategy
         self.cur_pos_path = f'./currOrders/{strategy}.csv'
         self.closed_pos_path = f'./closedOrders/{strategy}.csv'
-        self.cur_positions = None
-        self.closed_positions = None
+        self.symToUnits_path = f'./symToUnits/{strategy}.csv'
+        self.cur_positions = None # about orders
+        self.closed_positions = None # about orders
+        self.symbolToUnits = symbolToUnits
+        self.initialUnit = initialUnit
+        self.symToUnitsDF = None
 
     def get_most_recent(self, interval, days, data_client):
         now = datetime.utcnow()
@@ -56,7 +60,7 @@ class Trader():
             if self.position_data[symbol].iloc[-1] == 1:
                 # go long
                 if self.last_positions[symbol].iloc[-1] == 0:
-                    order = self.testnet_client.create_order(symbol=symbol, side="BUY", type="MARKET", quoteOrderQty = self.usdtunits)
+                    order = self.testnet_client.create_order(symbol=symbol, side="BUY", type="MARKET", quoteOrderQty = self.symbolToUnits[symbol])
                     self.fill_order(order)
                     self.report_trade(order, "GOING LONG", symbol)
                 else:
@@ -95,6 +99,7 @@ class Trader():
             self.closed_positions = pd.read_csv(self.closed_pos_path, index_col=[0])
 
         self.get_most_recent(self.bar_length, 200, self.data_client)
+        self.pre_trade()
         self.generate_trading_signals()
         self.execute_trades()
 
@@ -146,10 +151,11 @@ class Trader():
         entryPrice = self.cur_positions.loc[orderId]['entry_price']
         usdtEntry = self.cur_positions.loc[orderId]['quote_units']
         currentPrice = float(self.testnet_client.get_symbol_ticker(symbol=symbol)["price"])
-        usdtExit = round(entryPrice * (usdtEntry / currentPrice), 3)
-        usdtProfit = usdtEntry - usdtExit
-        closeReturn = usdtProfit / usdtEntry * 100
-        order = self.testnet_client.create_order(symbol=symbol, side="SELL", type="MARKET", quoteOrderQty=usdtExit)
+        idealusdtExit = round(usdtEntry * (currentPrice / entryPrice), 3)
+        order = self.testnet_client.create_order(symbol=symbol, side="SELL", type="MARKET", quoteOrderQty=idealusdtExit)
+        usdtExit = float(order["cummulativeQuoteQty"])
+        usdtProfit = usdtExit - usdtEntry
+        closeReturn = round(usdtProfit / usdtEntry * 100, 5)
         close_data = {"symbol": symbol,
                       "entryOrderId": orderId,
                       "entryTime": self.cur_positions.loc[orderId]["time"],
@@ -164,6 +170,38 @@ class Trader():
         self.closed_positions.loc[order["orderId"]] = close_data
         self.cur_positions = self.cur_positions.drop(index=orderId)
         return order
+
+    def pre_trade(self):
+        now = datetime.utcnow()
+        if not os.path.isfile(self.symToUnits_path):
+            # trading just get started for first time
+            self.symToUnitsDF = pd.DataFrame(columns=self.symbols)
+            units = []
+            for symbol in self.symbols:
+                units.append(self.symbolToUnits[symbol])
+                # self.symToUnitsDF.loc[now][symbol] = self.symbolToUnits[symbol]
+            self.symToUnitsDF.loc[now] = units
+            self.symToUnitsDF.to_csv(self.symToUnits_path)
+        else:
+            self.symToUnitsDF = pd.read_csv(self.symToUnits_path, index_col=[0])
+            lastSymToUnits = self.symToUnitsDF.tail(1)
+            units = []
+            for symbol in self.symbols:
+                # long before
+                if self.last_positions[symbol].iloc[-1] == 0:
+                    units.append(lastSymToUnits.tail(1)[symbol].values[0])
+                else:
+                    orderId = self.cur_positions.index[((self.cur_positions['symbol'] == symbol) & (self.cur_positions['strategy'] ==self.strategy)).argmax()]
+                    entryPrice = self.cur_positions.loc[orderId]['entry_price']
+                    usdtEntry = self.cur_positions.loc[orderId]['quote_units']
+                    currentPrice = float(self.testnet_client.get_symbol_ticker(symbol=symbol)["price"])
+                    idealusdtExit = round(usdtEntry * (currentPrice / entryPrice), 3)
+                    units.append(round(idealusdtExit, 1))
+            self.symToUnitsDF.loc[now] = units
+            self.symToUnitsDF.to_csv(self.symToUnits_path)
+        self.symbolToUnits = self.symToUnitsDF.tail(1).to_dict('records')[0]
+
+
 
 
 

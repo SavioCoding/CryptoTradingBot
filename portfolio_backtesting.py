@@ -3,16 +3,18 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 class PortfolioBacktester:
-    def __init__(self, positions, price_data, tc = -0.001):
+    def __init__(self, positions, price_data, risk_parity_dict, tc = -0.001):
         self.positions = positions
         self.price_data = price_data
         self.tc = tc
         self.return_df = None # simple return dataframe for buy and hold
         self.strategy_df = None # simple return dataframe for the strategy
         self.no_of_trades = None
+        self.risk_parity_dict = risk_parity_dict
 
     def calculate_asset_return(self):
         self.return_df = self.price_data.pct_change()
+        # self.return_df["portfolio_return"] = self.return_df.mul(pd.Series(self.risk_parity_dict), axis=1).mean(axis=1)  # 1/n weighting
         self.return_df["portfolio_return"] = self.return_df.mean(axis = 1)# 1/n weighting
         self.return_df["cportfolio_return"] = (self.return_df["portfolio_return"]+1).cumprod()
 
@@ -20,7 +22,8 @@ class PortfolioBacktester:
         self.no_of_trades = self.positions.diff().fillna(0).abs()
         self.strategy_df = self.price_data.pct_change() * self.positions.shift(1)
         self.strategy_df = self.strategy_df.add(self.no_of_trades * self.tc)
-        self.strategy_df["portfolio_return"] = self.strategy_df.mean(axis = 1) # 1/n weighting
+        # self.strategy_df["portfolio_return"] = self.strategy_df.mean(axis=1)  # 1/n weighting
+        self.strategy_df["portfolio_return"] = self.strategy_df.mul(pd.Series(self.risk_parity_dict), axis=1).sum(axis=1)
         self.strategy_df["cportfolio_return"] = (self.strategy_df["portfolio_return"] + 1).cumprod()
     def backtest(self):
         self.calculate_asset_return()
