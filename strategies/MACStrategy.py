@@ -51,8 +51,8 @@ if __name__ == "__main__":
         price_list.append(dataSeries)
     # filter the data needed
     price_data = pd.concat(price_list, axis = 1)
-    training_period = ("2020-01-01", "2021-12-31")
-    testing_period = ("2022-01-01", "2023-05-31")
+    training_period = ("2020-01-01", "2020-12-31")
+    testing_period = ("2021-01-01", "2023-05-31")
     with open('../risk_parity.json', 'r') as fp:
         risk_parity_dict = json.load(fp)
     macStrat = MAC(training_period, testing_period, price_data, symbols, risk_parity_dict)
@@ -60,6 +60,7 @@ if __name__ == "__main__":
     short_windows = [5, 10, 15, 20, 25, 30, 40, 50]
     long_windows = [25, 50, 75, 100, 150]
     params_dict = macStrat.optimise_strategy(short_windows, long_windows, True)
+    print("Best parameters combinations for training : ")
     print(params_dict)
     json.dump(params_dict, open("../params/MAC.txt", 'w'))
 
@@ -71,3 +72,5 @@ if __name__ == "__main__":
     # found (5, 50) is the best combination for TRXUSDT
     # found (10, 25) is the best combination for XRPUSDT
     macStrat.backtest(params_dict, False)
+
+    print(risk_parity_dict)

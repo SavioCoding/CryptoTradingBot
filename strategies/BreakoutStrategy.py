@@ -29,6 +29,7 @@ class Breakout(Strategy):
             else:
                 positions.append(positions[-1])
         self.position_data[symbol] = positions
+        self.price_data = self.price_data.drop(columns=["Buy", "Sell"])
 
     def optimise_strategy(self, high_days, low_days, training):
         params_dict = {}
@@ -62,16 +63,18 @@ if __name__ == "__main__":
     with open('../risk_parity.json', 'r') as fp:
         risk_parity_dict = json.load(fp)
     price_data = pd.concat(price_list, axis=1)
-    training_period = ("2020-01-01", "2021-12-31")
-    testing_period = ("2022-01-01", "2023-05-31")
+    training_period = ("2020-01-01", "2020-12-31")
+    testing_period = ("2021-01-01", "2023-05-31")
 
 
     breakoutStrat = Breakout(training_period, testing_period, price_data, symbols, risk_parity_dict)
     # True means training, False means testing
 
     low_days = [5, 10, 15, 20, 25, 30, 40, 50]
-    high_days = [10, 25, 50, 75, 100, 150, 200]
+    high_days = [10, 25, 50, 75, 100, 150]
     params_dict = breakoutStrat.optimise_strategy(high_days, low_days, True)
+    print("Best parameters combinations for training : ")
+    print(params_dict)
     json.dump(params_dict, open("../params/Breakout.txt", 'w'))
     breakoutStrat.backtest(params_dict, False)
     # found (5, 100) is the best combination

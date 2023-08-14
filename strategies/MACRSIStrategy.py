@@ -80,14 +80,15 @@ if __name__ == "__main__":
         price_list.append(dataSeries)
     # filter the data needed
     price_data = pd.concat(price_list, axis = 1)
-    training_period = ("2020-01-01", "2021-12-31")
-    testing_period = ("2022-01-01", "2023-05-31")
+    training_period = ("2020-01-01", "2020-12-31")
+    testing_period = ("2021-01-01", "2023-05-31")
     macrsiStrat = MACRSI(training_period, testing_period, price_data, symbols, risk_parity_dict)
     # # True means training, False means testing
     short_windows = [5, 10, 15, 20, 25, 30, 40, 50]
     long_windows = [25, 50, 75, 100, 150]
     periods = [5, 7, 9, 11, 13, 15]
     params_dict = macrsiStrat.optimise_strategy(short_windows, long_windows, periods, True)
+    print("Best parameters combinations for training : ")
     print(params_dict)
     json.dump(params_dict, open("../params/MACRSI.txt", 'w'))
     # params_dict = {'BTCUSDT': (5.0, 100.0), 'ETHUSDT': (15.0, 50.0), 'BNBUSDT': (5.0, 50.0), 'LTCUSDT': (15.0, 50.0), 'TRXUSDT': (5.0, 50.0), 'XRPUSDT': (10.0, 25.0)}

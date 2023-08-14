@@ -1,1 +1,1 @@
-{"BTCUSDT": [30, null], "ETHUSDT": [30, null], "LTCUSDT": [30, null], "TRXUSDT": [10, null], "XRPUSDT": [10, null]}
+{"BTCUSDT": [30, null], "ETHUSDT": [20, null], "LTCUSDT": [30, null], "TRXUSDT": [20, null], "XRPUSDT": [20, null]}

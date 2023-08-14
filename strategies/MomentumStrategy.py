@@ -44,14 +44,15 @@ if __name__ == "__main__":
         price_list.append(dataSeries)
     # filter the data needed
     price_data = pd.concat(price_list, axis = 1)
-    training_period = ("2020-01-01", "2021-12-31")
-    testing_period = ("2022-01-01", "2023-05-31")
+    training_period = ("2020-01-01", "2020-12-31")
+    testing_period = ("2021-01-01", "2023-05-31")
     with open('../risk_parity.json', 'r') as fp:
         risk_parity_dict = json.load(fp)
     momentumStrat = Momentum(training_period, testing_period, price_data, symbols, risk_parity_dict)
     # # True means training, False means testing
-    periods = (10, 20, 30, 90, 180, 270, 360)
+    periods = (10, 20, 30, 90, 180)
     params_dict = momentumStrat.optimise_strategy(periods, True)
+    print("Best parameters combinations for training : ")
     print(params_dict)
     json.dump(params_dict, open("../params/Momentum.txt", 'w'))
     # params_dict = {'BTCUSDT': (5.0, 100.0), 'ETHUSDT': (15.0, 50.0), 'BNBUSDT': (5.0, 50.0), 'LTCUSDT': (15.0, 50.0), 'TRXUSDT': (5.0, 50.0), 'XRPUSDT': (10.0, 25.0)}

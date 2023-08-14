@@ -16,6 +16,7 @@ class MACRSITrader(Trader.Trader):
         for symbol, params in self.params_dict.items():
             macRSIStrat.generate_signals(symbol, params)
         self.position_data = macRSIStrat.position_data
+        print(self.position_data.tail(30))
 
 
 if __name__ == "__main__":  # only if we run MACtrader.py as a script, please do the following:
