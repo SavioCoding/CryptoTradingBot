@@ -55,7 +55,7 @@ if __name__ == "__main__":
     symbols = ["BTCUSDT", "ETHUSDT", "LTCUSDT", "TRXUSDT", "XRPUSDT"]
     price_list = []
     for symbol in symbols:
-        data = pd.read_csv(f"../data/{symbol}-1d.csv", parse_dates=["Date"], index_col="Date")
+        data = pd.read_csv(f"./data/{symbol}-1d.csv", parse_dates=["Date"], index_col="Date")
         data = data.loc["2019-01-01":]
         dataSeries = data["Close"].rename(symbol)
         price_list.append(dataSeries)
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     params_dict = breakoutStrat.optimise_strategy(high_days, low_days, True)
     print("Best parameters combinations for training : ")
     print(params_dict)
-    json.dump(params_dict, open("../params/Breakout.txt", 'w'))
+    json.dump(params_dict, open("./params/Breakout.txt", 'w'))
     breakoutStrat.backtest(params_dict, False)
     # found (5, 100) is the best combination
     #

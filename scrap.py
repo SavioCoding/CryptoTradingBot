@@ -20,10 +20,10 @@ if __name__ == '__main__':
 
     # Define symbols needed
     symbols = ["BTCUSDT", "ETHUSDT","XRPUSDT"]
-    intervals = ["1d", "1h"]
     # Define intervals here
     # intervals allowed ["1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "8h", "12h",
     # "1d", "3d", "1w", "1M"]
+    intervals = ["1d", "1h"]
 
 
     data_client = Client(api_key = api_key, api_secret = secret_key, tld = "com")

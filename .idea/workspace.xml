@@ -4,7 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd0de4eb-dc64-41c2-bfb2-fad86b72cace" name="Changes" comment="Implemented SymbolToUnits for position tracking daily" />
+    <list default="true" id="bd0de4eb-dc64-41c2-bfb2-fad86b72cace" name="Changes" comment="Implemented SymbolToUnits for position tracking daily">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RiskParity.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/RiskParity.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/BTCUSDT-1d.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/BTCUSDT-1d.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/BTCUSDT-1h.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/BTCUSDT-1h.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/ETHUSDT-1d.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/ETHUSDT-1d.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/ETHUSDT-1h.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/ETHUSDT-1h.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/XRPUSDT-1d.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/XRPUSDT-1d.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/XRPUSDT-1h.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/XRPUSDT-1h.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrap.py" beforeDir="false" afterPath="$PROJECT_DIR$/scrap.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/strategies/BreakoutStrategy.py" beforeDir="false" afterPath="$PROJECT_DIR$/strategies/BreakoutStrategy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/strategies/MACStrategy.py" beforeDir="false" afterPath="$PROJECT_DIR$/strategies/MACStrategy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/strategies/MomentumStrategy.py" beforeDir="false" afterPath="$PROJECT_DIR$/strategies/MomentumStrategy.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -51,7 +64,7 @@
       <recent name="$PROJECT_DIR$/Trader" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.MACStrategy">
+  <component name="RunManager" selected="Python.RiskParity">
     <configuration name="BreakoutStrategy" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="trading" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -66,6 +79,28 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/strategies/BreakoutStrategy.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="BreakoutTrader" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="trading" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Traders" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Traders/BreakoutTrader.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -118,42 +153,20 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="MACTrader" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="trading" />
+    <configuration name="RiskParity" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Traders" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Traders/MACTrader.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="MomentumStrategy" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="trading" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/strategies" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/strategies/MomentumStrategy.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/RiskParity.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -186,19 +199,19 @@
     </configuration>
     <list>
       <item itemvalue="Python.main" />
+      <item itemvalue="Python.BreakoutTrader" />
+      <item itemvalue="Python.RiskParity" />
       <item itemvalue="Python.MACRSIStrategy" />
-      <item itemvalue="Python.MACTrader" />
-      <item itemvalue="Python.MomentumStrategy" />
       <item itemvalue="Python.BreakoutStrategy" />
       <item itemvalue="Python.MACStrategy" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.BreakoutTrader" />
+        <item itemvalue="Python.RiskParity" />
         <item itemvalue="Python.MACStrategy" />
         <item itemvalue="Python.MACRSIStrategy" />
         <item itemvalue="Python.BreakoutStrategy" />
-        <item itemvalue="Python.MomentumStrategy" />
-        <item itemvalue="Python.MACTrader" />
       </list>
     </recent_temporary>
   </component>
@@ -213,7 +226,7 @@
       <workItem from="1689601530381" duration="100193000" />
       <workItem from="1690388722501" duration="27153000" />
       <workItem from="1690543665404" duration="9319000" />
-      <workItem from="1690736938059" duration="65380000" />
+      <workItem from="1690736938059" duration="76647000" />
     </task>
     <task id="LOCAL-00001" summary="Finished Backtester and Strategy Backbone">
       <option name="closed" value="true" />
@@ -294,6 +307,11 @@
           <url>file://$PROJECT_DIR$/backup/MAC.py</url>
           <line>11</line>
           <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/portfolio_backtesting.py</url>
+          <line>9</line>
+          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

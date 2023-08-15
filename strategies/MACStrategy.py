@@ -45,7 +45,7 @@ if __name__ == "__main__":
     symbols = ["BTCUSDT", "ETHUSDT","LTCUSDT","TRXUSDT","XRPUSDT"]
     price_list = []
     for symbol in symbols:
-        data = pd.read_csv(f"../data/{symbol}-1d.csv", parse_dates=["Date"], index_col="Date")
+        data = pd.read_csv(f"./data/{symbol}-1d.csv", parse_dates=["Date"], index_col="Date")
         data = data.loc["2019-01-01":]
         dataSeries = data["Close"].rename(symbol)
         price_list.append(dataSeries)
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     params_dict = macStrat.optimise_strategy(short_windows, long_windows, True)
     print("Best parameters combinations for training : ")
     print(params_dict)
-    json.dump(params_dict, open("../params/MAC.txt", 'w'))
+    json.dump(params_dict, open("./params/MAC.txt", 'w'))
 
     # params_dict = {'BTCUSDT': (5.0, 100.0), 'ETHUSDT': (15.0, 50.0), 'BNBUSDT': (5.0, 50.0), 'LTCUSDT': (15.0, 50.0), 'TRXUSDT': (5.0, 50.0), 'XRPUSDT': (10.0, 25.0)}
     # found (5, 100) is the best combination for BTCUSDT
